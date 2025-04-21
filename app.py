@@ -13,15 +13,9 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         session['user'] = request.form['username']
         return redirect(url_for('menu'))
     return render_template('login.html')
-
-@app.route('/logout')
-def logout():
-    session.pop('user', None)
-    return redirect(url_for('login'))
