@@ -78,7 +78,6 @@ def like_item(category, item_name):
     return redirect(url_for('product_detail', category=category, item_name=item_name))
 
 
-
 @app.route('/comment/<category>/<item_name>', methods=['POST'])
 @login_required
 def comment_item(category, item_name):
@@ -112,5 +111,7 @@ def submit_order(category, item_name):
     flash("Buyurtma muvaffaqiyatli yuborildi!")
     return redirect(url_for('product_detail', category=category, item_name=item_name))
 
+=======
 if __name__ == '__main__':
     app.run(debug=True)
+
