@@ -30,6 +30,7 @@ def login_required(f):
 
 
 
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -42,11 +43,13 @@ def logout():
     session.pop('user', None)
     return redirect(url_for('login'))
 
+
 @app.route('/menu')
 @login_required
 def menu():
     data = load_json('data/food_data.json')
     return render_template('menu.html', data=data)
+
 
 @app.route('/like/<category>/<item_name>', methods=['POST'])
 @login_required
@@ -58,6 +61,7 @@ def like_item(category, item_name):
     flash("Like bosildi!")
     return redirect(url_for('product_detail', category=category, item_name=item_name))
 
+<<<<<<< HEAD
 
 @app.route('/comment/<category>/<item_name>', methods=['POST'])
 @login_required
@@ -71,3 +75,22 @@ def comment_item(category, item_name):
     save_json('data/comments.json', comments)
     flash("Izoh saqlandi!")
     return redirect(url_for('product_detail', category=category, item_name=item_name))
+=======
+@app.route('/menu/<category>/<item_name>')
+@login_required
+def product_detail(category, item_name):
+    data = load_json('data/food_data.json')
+    likes = load_json('data/likes.json', {})
+    comments = load_json('data/comments.json', {})
+    item = None
+    if category in data:
+        for food in data[category]:
+            if food['name'] == item_name:
+                item = food
+                break
+    if item:
+        return render_template('product_detail.html', item=item, category=category, likes=likes, comments=comments)
+    else:
+        return "Mahsulot topilmadi", 404
+
+>>>>>>> 28dfebbb2b2c752be7987cb0e27f3c9acb02bf6c
