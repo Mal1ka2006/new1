@@ -20,3 +20,8 @@ def login():
         session['user'] = request.form['username']
         return redirect(url_for('menu'))
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('login'))
