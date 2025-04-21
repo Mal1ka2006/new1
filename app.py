@@ -57,3 +57,17 @@ def like_item(category, item_name):
     save_json('data/likes.json', likes)
     flash("Like bosildi!")
     return redirect(url_for('product_detail', category=category, item_name=item_name))
+
+
+@app.route('/comment/<category>/<item_name>', methods=['POST'])
+@login_required
+def comment_item(category, item_name):
+    comments = load_json('data/comments.json', {})
+    key = f"{category}:{item_name}"
+    comment = request.form['comment']
+    if key not in comments:
+        comments[key] = []
+    comments[key].append(comment)
+    save_json('data/comments.json', comments)
+    flash("Izoh saqlandi!")
+    return redirect(url_for('product_detail', category=category, item_name=item_name))
