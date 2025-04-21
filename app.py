@@ -5,7 +5,6 @@ from functools import wraps
 app = Flask(__name__)
 app.secret_key = 'secret_key_here'
 
-<<<<<<< HEAD
 
 def load_json(filepath, default={}):
     if not os.path.exists(filepath):
@@ -28,4 +27,4 @@ def login_required(f):
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
->>>>>>> 6def7295d2ec4281113d04fedb89f06f2149ec2f
+
