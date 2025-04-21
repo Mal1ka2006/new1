@@ -28,32 +28,25 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-
-
-@app.route('/', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        session['user'] = request.form['username']
-        return redirect(url_for('menu'))
-    return render_template('login.html')
-=======
-@app.route('/logout')
-def logout():
-    session.pop('user', None)
-    return redirect(url_for('login'))
-=======
-
-
-
-
-
-
-
-
-
 @app.route('/menu')
 @login_required
 def menu():
     data = load_json('data/food_data.json')
     return render_template('menu.html', data=data)
 
+@app.route('/menu/<category>/<item_name>')
+@login_required
+def product_detail(category, item_name):
+    data = load_json('data/food_data.json')
+    likes = load_json('data/likes.json', {})
+    comments = load_json('data/comments.json', {})
+    item = None
+    if category in data:
+        for food in data[category]:
+            if food['name'] == item_name:
+                item = food
+                break
+    if item:
+        return render_template('product_detail.html', item=item, category=category, likes=likes, comments=comments)
+    else:
+        return "Mahsulot topilmadi", 404
