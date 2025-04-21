@@ -61,7 +61,6 @@ def like_item(category, item_name):
     flash("Like bosildi!")
     return redirect(url_for('product_detail', category=category, item_name=item_name))
 
-<<<<<<< HEAD
 
 @app.route('/comment/<category>/<item_name>', methods=['POST'])
 @login_required
@@ -93,4 +92,4 @@ def product_detail(category, item_name):
     else:
         return "Mahsulot topilmadi", 404
 
->>>>>>> 28dfebbb2b2c752be7987cb0e27f3c9acb02bf6c
+
