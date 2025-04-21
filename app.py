@@ -28,7 +28,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-<<<<<<< HEAD
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -36,4 +36,7 @@ def login():
         return redirect(url_for('menu'))
     return render_template('login.html')
 =======
->>>>>>> faeb4f3bc62caf1ff02b00f76809edcf88680a00
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('login'))
