@@ -50,7 +50,23 @@ def menu():
     data = load_json('data/food_data.json')
     return render_template('menu.html', data=data)
 
-
+@app.route('/menu/<category>/<item_name>')
+@login_required
+def product_detail(category, item_name):
+    data = load_json('data/food_data.json')
+    likes = load_json('data/likes.json', {})
+    comments = load_json('data/comments.json', {})
+    item = None
+    if category in data:
+        for food in data[category]:
+            if food['name'] == item_name:
+                item = food
+                break
+    if item:
+        return render_template('product_detail.html', item=item, category=category, likes=likes, comments=comments)
+    else:
+        return "Mahsulot topilmadi", 404
+    
 @app.route('/like/<category>/<item_name>', methods=['POST'])
 @login_required
 def like_item(category, item_name):
@@ -75,21 +91,27 @@ def comment_item(category, item_name):
     flash("Izoh saqlandi!")
     return redirect(url_for('product_detail', category=category, item_name=item_name))
 =======
-@app.route('/menu/<category>/<item_name>')
-@login_required
-def product_detail(category, item_name):
-    data = load_json('data/food_data.json')
-    likes = load_json('data/likes.json', {})
-    comments = load_json('data/comments.json', {})
-    item = None
-    if category in data:
-        for food in data[category]:
-            if food['name'] == item_name:
-                item = food
-                break
-    if item:
-        return render_template('product_detail.html', item=item, category=category, likes=likes, comments=comments)
-    else:
-        return "Mahsulot topilmadi", 404
 
+
+
+@app.route('/order/<category>/<item_name>', methods=['POST'])
+@login_required
+def submit_order(category, item_name):
+    orders = load_json('data/orders.json', [])
+    order = {
+        'user': session['user'],
+        'item': item_name,
+        'category': category,
+        'name': request.form['name'],
+        'address': request.form['address'],
+        'phone': request.form['phone']
+    }
+    orders.append(order)
+    save_json('data/orders.json', orders)
+    flash("Buyurtma muvaffaqiyatli yuborildi!")
+    return redirect(url_for('product_detail', category=category, item_name=item_name))
+
+=======
+if __name__ == '__main__':
+    app.run(debug=True)
 
