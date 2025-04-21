@@ -29,6 +29,7 @@ def login_required(f):
     return decorated_function
 
 
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -40,3 +41,19 @@ def login():
 def logout():
     session.pop('user', None)
     return redirect(url_for('login'))
+=======
+
+
+
+
+
+
+
+
+
+@app.route('/menu')
+@login_required
+def menu():
+    data = load_json('data/food_data.json')
+    return render_template('menu.html', data=data)
+
