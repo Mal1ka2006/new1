@@ -50,32 +50,6 @@ def menu():
     data = load_json('data/food_data.json')
     return render_template('menu.html', data=data)
 
-
-@app.route('/like/<category>/<item_name>', methods=['POST'])
-@login_required
-def like_item(category, item_name):
-    likes = load_json('data/likes.json', {})
-    key = f"{category}:{item_name}"
-    likes[key] = likes.get(key, 0) + 1
-    save_json('data/likes.json', likes)
-    flash("Like bosildi!")
-    return redirect(url_for('product_detail', category=category, item_name=item_name))
-
-<<<<<<< HEAD
-
-@app.route('/comment/<category>/<item_name>', methods=['POST'])
-@login_required
-def comment_item(category, item_name):
-    comments = load_json('data/comments.json', {})
-    key = f"{category}:{item_name}"
-    comment = request.form['comment']
-    if key not in comments:
-        comments[key] = []
-    comments[key].append(comment)
-    save_json('data/comments.json', comments)
-    flash("Izoh saqlandi!")
-    return redirect(url_for('product_detail', category=category, item_name=item_name))
-=======
 @app.route('/menu/<category>/<item_name>')
 @login_required
 def product_detail(category, item_name):
@@ -92,5 +66,51 @@ def product_detail(category, item_name):
         return render_template('product_detail.html', item=item, category=category, likes=likes, comments=comments)
     else:
         return "Mahsulot topilmadi", 404
+    
+@app.route('/like/<category>/<item_name>', methods=['POST'])
+@login_required
+def like_item(category, item_name):
+    likes = load_json('data/likes.json', {})
+    key = f"{category}:{item_name}"
+    likes[key] = likes.get(key, 0) + 1
+    save_json('data/likes.json', likes)
+    flash("Like bosildi!")
+    return redirect(url_for('product_detail', category=category, item_name=item_name))
 
->>>>>>> 28dfebbb2b2c752be7987cb0e27f3c9acb02bf6c
+
+
+@app.route('/comment/<category>/<item_name>', methods=['POST'])
+@login_required
+def comment_item(category, item_name):
+    comments = load_json('data/comments.json', {})
+    key = f"{category}:{item_name}"
+    comment = request.form['comment']
+    if key not in comments:
+        comments[key] = []
+    comments[key].append(comment)
+    save_json('data/comments.json', comments)
+    flash("Izoh saqlandi!")
+    return redirect(url_for('product_detail', category=category, item_name=item_name))
+=======
+
+
+
+@app.route('/order/<category>/<item_name>', methods=['POST'])
+@login_required
+def submit_order(category, item_name):
+    orders = load_json('data/orders.json', [])
+    order = {
+        'user': session['user'],
+        'item': item_name,
+        'category': category,
+        'name': request.form['name'],
+        'address': request.form['address'],
+        'phone': request.form['phone']
+    }
+    orders.append(order)
+    save_json('data/orders.json', orders)
+    flash("Buyurtma muvaffaqiyatli yuborildi!")
+    return redirect(url_for('product_detail', category=category, item_name=item_name))
+
+if __name__ == '__main__':
+    app.run(debug=True)
