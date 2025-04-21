@@ -61,6 +61,21 @@ def like_item(category, item_name):
     flash("Like bosildi!")
     return redirect(url_for('product_detail', category=category, item_name=item_name))
 
+<<<<<<< HEAD
+
+@app.route('/comment/<category>/<item_name>', methods=['POST'])
+@login_required
+def comment_item(category, item_name):
+    comments = load_json('data/comments.json', {})
+    key = f"{category}:{item_name}"
+    comment = request.form['comment']
+    if key not in comments:
+        comments[key] = []
+    comments[key].append(comment)
+    save_json('data/comments.json', comments)
+    flash("Izoh saqlandi!")
+    return redirect(url_for('product_detail', category=category, item_name=item_name))
+=======
 @app.route('/menu/<category>/<item_name>')
 @login_required
 def product_detail(category, item_name):
@@ -78,3 +93,4 @@ def product_detail(category, item_name):
     else:
         return "Mahsulot topilmadi", 404
 
+>>>>>>> 28dfebbb2b2c752be7987cb0e27f3c9acb02bf6c
