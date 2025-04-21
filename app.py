@@ -19,7 +19,7 @@ def prosto():
 def save_json(filepath, data):
     with open(filepath, 'w') as f:
         json.dump(data, f, indent=4)
-=======
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -28,11 +28,38 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
+
+
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        session['user'] = request.form['username']
+        return redirect(url_for('menu'))
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('login'))
+
+
 @app.route('/menu')
 @login_required
 def menu():
     data = load_json('data/food_data.json')
     return render_template('menu.html', data=data)
+
+
+@app.route('/like/<category>/<item_name>', methods=['POST'])
+@login_required
+def like_item(category, item_name):
+    likes = load_json('data/likes.json', {})
+    key = f"{category}:{item_name}"
+    likes[key] = likes.get(key, 0) + 1
+    save_json('data/likes.json', likes)
+    flash("Like bosildi!")
+    return redirect(url_for('product_detail', category=category, item_name=item_name))
 
 @app.route('/menu/<category>/<item_name>')
 @login_required
@@ -50,3 +77,4 @@ def product_detail(category, item_name):
         return render_template('product_detail.html', item=item, category=category, likes=likes, comments=comments)
     else:
         return "Mahsulot topilmadi", 404
+
