@@ -28,3 +28,18 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
+
+
+
+
+
+
+
+
+
+@app.route('/menu')
+@login_required
+def menu():
+    data = load_json('data/food_data.json')
+    return render_template('menu.html', data=data)
